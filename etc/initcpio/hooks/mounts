@@ -1,0 +1,20 @@
+#!/bin/sh
+run_latehook() {
+    echo "mounts: unmounting old /new_root"
+    umount /new_root
+
+    echo "mounts: formatting overlay"
+    mkfs.ext4 -F /dev/disk/by-partuuid/149f429b-01
+
+    echo "mounts: creating /overlay"
+    mkdir /overlay
+    mount /dev/disk/by-partuuid/149f429b-01 /overlay
+
+    mkdir /overlay/lower
+    mkdir /overlay/upper
+    mkdir /overlay/work
+
+    echo "mounts: mounting /new_root"
+    mount /dev/disk/by-partuuid/149f429b-02 -o ro /overlay/lower
+    mount -t overlay overlay -o lowerdir=/overlay/lower,upperdir=/overlay/upper,workdir=/overlay/work /new_root
+}

@@ -1,0 +1,40 @@
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+
+menuentry 'Arch Linux, with immutable Linux linux-lts' --class arch --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-linux-lts-advanced-0467c3be-27bf-424e-b38c-b93df8283154' {
+        load_video
+        set gfxpayload=keep
+        insmod gzio
+        insmod part_msdos
+        insmod ext2
+        set root='hd0,msdos2'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos2 --hint-efi=hd0,msdos2 --hint-baremetal=ahci0,msdos2  0467c3be-27bf-424e-b38c-b93df8283154
+        else
+          search --no-floppy --fs-uuid --set=root 0467c3be-27bf-424e-b38c-b93df8283154
+        fi
+        echo    'Loading Linux linux-lts ...'
+        linux   /boot/vmlinuz-linux-lts root=UUID=0467c3be-27bf-424e-b38c-b93df8283154 rw  loglevel=3
+        echo    'Loading initial ramdisk ...'
+        initrd  /boot/intel-ucode.img /boot/initramfs-linux-lts-immutable.img
+}
+menuentry 'Arch Linux, with immutable Linux linux-lts (fallback initramfs)' --class arch --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-linux-lts-fallback-0467c3be-27bf-424e-b38c-b93df8283154' {
+        load_video
+        set gfxpayload=keep
+        insmod gzio
+        insmod part_msdos
+        insmod ext2
+        set root='hd0,msdos2'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos2 --hint-efi=hd0,msdos2 --hint-baremetal=ahci0,msdos2  0467c3be-27bf-424e-b38c-b93df8283154
+        else
+          search --no-floppy --fs-uuid --set=root 0467c3be-27bf-424e-b38c-b93df8283154
+        fi
+        echo    'Loading Linux linux-lts ...'
+        linux   /boot/vmlinuz-linux-lts root=UUID=0467c3be-27bf-424e-b38c-b93df8283154 rw  loglevel=3
+        echo    'Loading initial ramdisk ...'
+        initrd  /boot/intel-ucode.img /boot/initramfs-linux-lts-immutable-fallback.img
+}
